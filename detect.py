@@ -3,13 +3,15 @@ import cv2
 import os
 from moviepy.editor import VideoFileClip
 
-classifier = cv2.CascadeClassifier("classifier/stop-classifier.xml")
+stop_casade = cv2.CascadeClassifier("casade/stop_casade.xml")
+left_casade = cv2.CascadeClassifier("casade/left_casade.xml")
+right_casade = cv2.CascadeClassifier("casade/right_casade.xml")
 
 def detect(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    stop_signs = classifier.detectMultiScale(gray, 1.02, 10)
-    for (x, y, w, h) in stop_signs:
-        cv2.rectangle(img, (x,y), (x + w, y + h), (0, 255, 255), 2)
+    signs = left_casade.detectMultiScale(gray, 1.02, 10)
+    for (x, y, w, h) in signs:
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 255, 0), 2)
     return img
 
 def load_images_from_folder(folder):
@@ -22,25 +24,43 @@ def load_images_from_folder(folder):
 
 def rename_files(folder):
     images = load_images_from_folder(folder)
-    i = 1115
+    i = 1318
     for image in images :
         i += 1
         print('processing')
         cv2.imwrite(os.path.join('output', '{0}.jpg'.format(i)), image)
     pass
 
-# images = load_images_from_folder('images')
-# i = 0
-# for image in images :
-#     i += 1
-#     try:        
-#         print('processing')
-#         image = detect(image)
-#         cv2.imwrite(os.path.join('output', '{0}.jpg'.format(i)), image)
-#     except:
-#         pass
-#     pass
+def detect_folder(folder):
+    images = load_images_from_folder(folder)
+    i = 0
+    for image in images:
+        i += 1
+        try:
+            print('processing')
+            image = detect(image)
+            cv2.imwrite(os.path.join('output', '{0}.jpg'.format(i)), image)
+        except:
+            pass
+    pass
 
-# video = VideoFileClip("videos/input.avi")
-# output = video.fl_image(detect)
-# output.write_videofile("output.mp4", audio=False)
+def detect_video(input, output):
+    video = VideoFileClip(input)
+    output = video.fl_image(detect)
+    output.write_videofile(output, audio=False)
+    pass
+
+def detect_image(input, output):
+    image = cv2.imread(input)
+    image = detect(image)
+    cv2.imwrite(output, image)
+    pass
+
+def write(str):
+    file = open('output.txt', 'w')
+    file.write(str)
+    file.close()
+    pass
+
+#detect_video('videos/input.avi', 'output.mp4')
+detect_image('output/1.jpg', 'output.jpg')

@@ -44,5 +44,3 @@ def rename_files(folder):
 # video = VideoFileClip("videos/input.avi")
 # output = video.fl_image(detect)
 # output.write_videofile("output.mp4", audio=False)
-
-rename_files('negatives')

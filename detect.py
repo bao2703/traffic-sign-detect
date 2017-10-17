@@ -3,15 +3,19 @@ import cv2
 import os
 from moviepy.editor import VideoFileClip
 
-stop_casade = cv2.CascadeClassifier("casade/stop_casade.xml")
-left_casade = cv2.CascadeClassifier("casade/left_casade.xml")
-right_casade = cv2.CascadeClassifier("casade/right_casade.xml")
+stop_casade = cv2.CascadeClassifier("cascade/stop_cascade.xml")
+left_casade = cv2.CascadeClassifier("cascade/left_cascade.xml")
+right_casade = cv2.CascadeClassifier("cascade/right_cascade.xml")
 
 def detect(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    signs = left_casade.detectMultiScale(gray, 1.02, 10)
-    for (x, y, w, h) in signs:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 255, 0), 2)
+    stop = stop_casade.detectMultiScale(gray, 1.02, 10)
+    left = left_casade.detectMultiScale(gray, 1.02, 10)
+    right = right_casade.detectMultiScale(gray)
+    for (x, y, w, h) in stop:
+        if w > 100:
+            cv2.putText(img, 'Stop', (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 0), 2, cv2.LINE_AA)
+            #cv2.rectangle(img, (x, y), (x + w, y + h), (255, 255, 0), 2)
     return img
 
 def load_images_from_folder(folder):
@@ -63,4 +67,4 @@ def write(str):
     pass
 
 #detect_video('videos/input.avi', 'output.mp4')
-detect_image('output/1.jpg', 'output.jpg')
+detect_image('test/stop.jpg', 'output.jpg')

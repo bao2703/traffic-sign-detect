@@ -4,7 +4,7 @@ import os
 
 s = ''
 stop_cascade = cv2.CascadeClassifier("cascade/stop_cascade.xml")
-left_cascade = cv2.CascadeClassifier("cascade/cascade.xml")
+left_cascade = cv2.CascadeClassifier("cascade/left_cascade.xml")
 right_cascade = cv2.CascadeClassifier("cascade/right_cascade.xml")
 
 def detect(img, i):
@@ -27,14 +27,6 @@ def detect(img, i):
         s += str(i) + ' 2\n'
         print(2)
     return img
-
-def load_images_from_folder(folder):
-    images = []
-    for filename in os.listdir(folder):
-        img = cv2.imread(os.path.join(folder, filename))
-        if img is not None:
-            images.append(img)
-    return images
 
 def write(str):
     file = open('output.txt', 'w')
